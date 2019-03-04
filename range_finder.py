@@ -29,12 +29,13 @@ GPIO.setup(ECHO, GPIO.IN)
 current_state = 0
 try:
     while True:
-        time.sleep(0.1)
+        #Do it every second
+        time.sleep(1)
 
-        # send pulse to trigger
-        GPIO.output(TRIG,1)
+        #Send pulse to trigger
+        GPIO.output(TRIG,True)
         time.sleep(0.00001)
-        GPIO.output(TRIG,0)
+        GPIO.output(TRIG,False)
 
         #measure the echo time
         while GPIO.input(ECHO) == 0:
@@ -44,15 +45,19 @@ try:
         while GPIO.input(ECHO) == 1:
             pass
         stop = time.time()
+        
+        pulse_duration = stop - start
+        distance = round((pulse_duration * 17150), 2)
 
+        clear()
         print(" ")
-        print("  Distance: %s" %((stop - start) * 170))
+        print("  Distance: %s cm." %(distance))
 
 except KeyboardInterrupt:
     print(" ")
     print(color.ERROR + " Script terminated by User. Bye." + color.RESET)
     pass
 finally:
-    GPIO.output(on_led,False)
+    GPIO.output(TRIG,False)
     GPIO.cleanup()
 

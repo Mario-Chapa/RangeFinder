@@ -5,7 +5,6 @@ Finds the distance between the sensor and the object directly in front
 
 import RPi.GPIO as GPIO
 import time
-import dht11
 import smbus
 from os import system as sys
 import lcd_i2c as lcd
@@ -59,7 +58,7 @@ try:
         distance = round((pulse_duration * 17150), 1)
 
         # Led intensity calculation
-        duty_cycle = max(0, min(100, round(distance * 5,0)))
+        duty_cycle = max(0, min(100, (distance * 3)))
         duty_cycle = 100 - duty_cycle
         p.ChangeDutyCycle(duty_cycle)
 

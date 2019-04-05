@@ -21,17 +21,13 @@ def clear():
 
 TRIG = 17
 ECHO = 27
-LED = 26
 
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(TRIG, GPIO.OUT)
-GPIO.setup(LED, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
-p = GPIO.PWM(LED,100)
 
 current_state = 0
-p.start(0)
 lcd.lcd_init()
      
 lcd.lcd_string(" Distance: ",lcd.LCD_LINE_1)
@@ -57,11 +53,6 @@ try:
         pulse_duration = end - start
         distance = round((pulse_duration * 17150), 1)
 
-        # Led intensity calculation
-        duty_cycle = max(0, min(100, (distance * 3)))
-        duty_cycle = 100 - duty_cycle
-        p.ChangeDutyCycle(duty_cycle)
-
         clear()
         print(" ")
 
@@ -71,8 +62,6 @@ try:
 
         # reset lcd display and send new message
         lcd.lcd_string("    " + str(distance).zfill(6) + "       " ,lcd.LCD_LINE_2)
-
-        #print(duty_cycle)
 
 except KeyboardInterrupt:
     print(" ")

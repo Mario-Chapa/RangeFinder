@@ -22,6 +22,8 @@ def clear():
 TRIG = 17
 ECHO = 27
 
+ONSOKU = 343 #(m/s)
+
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(TRIG, GPIO.OUT)
@@ -38,7 +40,7 @@ try:
 
         #Send pulse to trigger
         GPIO.output(TRIG,True)
-        time.sleep(0.00001)
+        time.sleep(10 * 1e-6) # micro = 1e-6
         GPIO.output(TRIG,False)
 
         #measure the echo time
@@ -51,7 +53,9 @@ try:
         end = time.time()
 
         pulse_duration = end - start
-        distance = round((pulse_duration * 17150), 1)
+        TMP = pulse_duration * ONSOKU #(meter)
+        TMP = TMP * 1e2 #(cm)
+        distance = round((TMP/2), 1)
 
         clear()
         print(" ")
@@ -61,13 +65,14 @@ try:
         print(stringmessage)
 
         # reset lcd display and send new message
-        lcd.lcd_string("    " + str(distance).zfill(6) + "       " ,lcd.LCD_LINE_2)
+        lcd.lcd_string("    " + str(distance).zfill(6) + " cm.   " ,lcd.LCD_LINE_2)
 
 except KeyboardInterrupt:
     print(" ")
     print(color.ERROR + " Script terminated by User. Bye." + color.RESET)
+    lcd.lcd_string(" Program       " ,lcd.LCD_LINE_1)
+    lcd.lcd_string("      Finished." ,lcd.LCD_LINE_2)
     pass
 finally:
-    p.stop()
     GPIO.cleanup()
 

@@ -4,6 +4,7 @@ Finds the distance between the sensor and the object directly in front
 """
 
 import RPi.GPIO as GPIO
+from timeit import default_timer as timer
 import time
 import smbus
 from os import system as sys
@@ -36,7 +37,7 @@ lcd.lcd_string(" Distance: ",lcd.LCD_LINE_1)
 try:
     while True:
         #Do it every second
-        time.sleep(1)
+        time.sleep(0.5)
 
         #Send pulse to trigger
         GPIO.output(TRIG,True)
@@ -47,10 +48,10 @@ try:
         while GPIO.input(ECHO) == 0:
             pass
 
-        start = time.time()
+        start = timer()
         while GPIO.input(ECHO) == 1:
             pass
-        end = time.time()
+        end = timer()
 
         pulse_duration = end - start
         TMP = pulse_duration * ONSOKU #(meter)
